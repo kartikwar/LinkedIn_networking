@@ -8,9 +8,9 @@ import parameters, csv, os.path, time
 
 # Functions 
 def search_and_send_request(keywords, till_page, writer):
-    for page in range(1, till_page + 1):
+    for page in range(20, till_page + 1):
         print('\nINFO: Checking on page %s' % (page))
-        query_url = 'https://www.linkedin.com/search/results/people/?keywords=' + keywords + '&origin=GLOBAL_SEARCH_HEADER&page=' + str(page)
+        query_url = 'https://www.linkedin.com/search/results/people/?geoUrn=%5B"101452733"%2C"105490917"%5D&keywords=' + keywords + '&origin=FACETED_SEARCH&page=' + str(page)
         driver.get(query_url)
         time.sleep(5)
         html = driver.find_element_by_tag_name('html')
@@ -34,6 +34,11 @@ def search_and_send_request(keywords, till_page, writer):
                     connection.click()
                     time.sleep(5)
                     if driver.find_elements_by_class_name('artdeco-button--primary')[0].is_enabled():
+                        driver.find_elements_by_class_name('artdeco-button--secondary')[0].click()
+                        time.sleep(2)
+                        inputElement = driver.find_element_by_id("custom-message")
+                        inputElement.send_keys(parameters.connection_note)
+                        # driver.find_elements_by_id('ember215')[0].click()
                         driver.find_elements_by_class_name('artdeco-button--primary')[0].click()
                         writer.writerow([text])
                         print("%s ) SENT: %s" % (index, text))
